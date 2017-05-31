@@ -1,0 +1,140 @@
+html{
+  font-size: 16px;
+  font-family: sans-serif;
+}
+
+body{
+  margin: 0;
+}
+
+
+.tick line {
+  fill: none;
+  shape-rendering: crispEdges;
+  stroke: #888;
+  stroke-width: 1px;
+}
+
+.grid line {
+  stroke: lightgrey;
+  stroke-opacity: 0.7;
+  shape-rendering: crispEdges;
+}
+
+.grid path {
+  stroke-width: 0;
+}
+
+.qd-goalLine-line line {
+  stroke: grey;
+  stroke-opacity: 0.7;
+  stroke-width: 2;
+  shape-rendering: crispEdges;
+}
+
+.qd-goalLine-line path {
+  stroke-width: 0;
+  display: none;
+}
+
+.qd-graph-area {
+  display: block;
+}
+
+/**Line Graph**/
+
+.line {
+  fill: none;
+  stroke-linejoin: round;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.qd-legend {
+  width: 100%;
+  font: 10px sans-serif;
+}
+
+.qd-legend-element {
+  cursor: pointer;
+  text-align: center;
+  vertical-align: middle;
+  float: left;
+  height: 45px;
+  line-height: 45px;
+}
+
+.qd-legend-circle {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  vertical-align: middle;
+  display: inline-block;
+  margin-right: 10px;
+}
+.qd-legend .qd-legend-element img {
+  margin: 0 5px 0 0;
+}
+
+.legend img {
+  height: 15px;
+  position: relative;
+  top: 3px;
+}
+
+  /** Tooltip Styles **/
+
+#d3-tip {
+  line-height: 1;
+  font-size: 13px;
+  text-align: center;
+  padding: 10px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: hsla(0, 0%, 20%, 0.9);
+  color: #fff;
+}
+
+#d3-tip:after {
+  content: ' ';
+  position: absolute;
+  width: 0px;
+  height: 0px;
+}
+
+#d3-tip.top:after {
+  top: 100%;
+  left: 50%;
+  margin-left: -8px;
+  border-top: 8px solid hsla(0, 0%, 20%, 0.9);
+  border-right: 8px solid transparent;
+  border-left: 8px solid transparent;
+}
+
+#d3-tip.bottom:after {
+  bottom: 100%;
+  left: 50%;
+  margin-left: -8px;
+  border-bottom: 8px solid hsla(0, 0%, 20%, 0.9);
+  border-right: 8px solid transparent;
+  border-left: 8px solid transparent;
+}
+
+#d3-tip.left:after {
+  top: 50%;
+  left: 100%;
+  margin-top: -8px;
+  border-left: 8px solid hsla(0, 0%, 20%, 0.9);
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+}
+
+#d3-tip.right:after {
+  top: 50%;
+  right: 100%;
+  margin-top: -8px;
+  border-right: 8px solid hsla(0, 0%, 20%, 0.9);
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+}
