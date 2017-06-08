@@ -8,44 +8,39 @@ var Chart = function() { };
   * @param {String} element - Name of the element to which graph is to be drawn
   * @param {Object} data    - Data for which graph is to be drawn
   * @param {Object} options - Config options that can be added to the graph.
-  * @param {Array} metaData - Meta data about the other graphs.
+  * @param {Array} stack    - List of keys which is to be made as stack.
   */
 Chart.prototype.setValues = function(element, data, options, metaData) {
 
-  var _this = this;
+  var _this = this,
+      color = CONSTANTS.DEFAULT_COLORS;
 
   // To check whether it is the DOM element or classname or id of the DOM element
   if (typeof element === 'object') {
-    _this.element = element;
+    _this.element   = element;
   } else {
-    if (element[0] === '#' || element[0] === '.') {
-      _this.element = document.querySelector(element);
-    }
-    else {
-      console.error('Error: Wrong Element format.');
-    }
+    _this.element = document.querySelector(element);
   }
 
   _this.elementClass = _this.element.className;
   _this.data         = data;
   _this.options      = options || { };
 
+  // This is logic to set an array of colors for graphs that need multicolor
   if (metaData) {
-    switch (metaData.type) {
-      case 'bar':
-        var bar = _this.options.bar;
-        _this.color = (bar && bar.color)
-                            ? bar.color
-                            : CONSTANTS.BAR.color;
-        break;
-      case 'stackedBar':
-        var bar = _this.options.bar;
-        _this.stackList = metaData.stack || [ ];
-        _this.color = (bar && bar.color)
-                            ? bar.color
-                            : CONSTANTS.STACKEDBAR.color;
-        break;
-
+    if (metaData.type === 'stack') {
+      _this.stackList = metaData.stack || [ ];
+      if (_this.options.bar && _this.options.bar.color) {
+        _this.color = _this.options.bar.color;
+      } else {
+        _this.color = color;
+      }
+    } else if (metaData.type === 'multiline') {
+      if (_this.options.line && _this.options.line.color) {
+        _this.color = _this.options.line.color;
+      } else {
+        _this.color = color;
+      }
     }
   }
 
@@ -58,6 +53,7 @@ Chart.prototype.setValues = function(element, data, options, metaData) {
     bottom : (margin && margin.bottom) ? margin.bottom : 0
   };
 
+  // var excessHeight = _this.margin.bottom ;
   var axis   = _this.options.axis;
   var legend = _this.options.legend;
   if (axis && axis.xAxis && axis.xAxis.orientation) {
@@ -66,31 +62,14 @@ Chart.prototype.setValues = function(element, data, options, metaData) {
     var excessHeight = CONSTANTS.DEFAULT_MARGIN.TOP;
   }
 
-  // The height and width of the window if the user haven't specified the dimension
-  // for the graphs.
-  var width = window.innerWidth
-              || document.documentElement.clientWidth
-              || document.body.clientWidth;
-
-  var height = window.innerHeight
-               || document.documentElement.clientHeight
-               || document.body.clientHeight;
-
-
-  _this.width         = (_this.element.offsetWidth === 0)
-                              ? width
-                              : _this.element.offsetWidth;
-  _this.height        = (_this.element.offsetHeight === 0)
-                              ? height
-                              : _this.element.offsetHeight;
-  _this.elementHeight = (_this.element.offsetHeight === 0)
-                              ? height
-                              : _this.element.offsetHeight;
+  _this.width         = _this.element.offsetWidth;
+  _this.height        = _this.element.offsetHeight;
+  _this.elementHeight = _this.element.offsetHeight;
 
   _this.element.addEventListener('touchstart', handleTouch, false);
 
   function handleTouch(e) {
-    e.defaultPrevented();
+    e.preventDefault();
   };
 
 };
@@ -99,6 +78,7 @@ Chart.prototype.setValues = function(element, data, options, metaData) {
   * Creates the canvas, calculate and draw X and Y axis of the graph & add grid lines.
   */
 Chart.prototype.drawChart = function() {
+
   var _this  = this,
       legend = _this.options.legend,
       axis   = _this.options.axis;
@@ -109,12 +89,11 @@ Chart.prototype.drawChart = function() {
       _this.height -= _this.legendHeight;
       _this.elementHeight -= _this.legendHeight;
     } else {
-      _this.legendHeight = 45;
+      _this.legendHeight = '45';
       _this.height -= _this.legendHeight;
       _this.elementHeight -= _this.legendHeight;
     }
   }
-
   _this.createCanvas();
   _this.xScales();
   _this.yScales();
@@ -122,6 +101,10 @@ Chart.prototype.drawChart = function() {
 
   if (_this.options.grids) {
     _this.addGridLines(_this.options.grids);
+  }
+
+  if (axis && axis.yAxis && axis.yAxis.ticks && axis.yAxis.ticks.values) {
+    _this.addHorizontalGridLines();
   }
 
 };
@@ -139,12 +122,14 @@ Chart.prototype.createCanvas = function() {
     .selectAll('svg')
     .remove();
 
+  var svg = d3.select(_this.element)
+              .append('svg')
+              .attr('width', '100%')
+              .attr('height', _this.elementHeight)
+              .attr('class', 'qd-graph-area');
+
   // All elements like axis, lines, bars are to be attached to this object.
-  _this.plot = d3.select(_this.element)
-                 .append('svg')
-                 .attr('width', '100%')
-                 .attr('height', _this.elementHeight)
-                 .attr('class', 'fc-graph-area');
+  _this.plot = svg;
 
 };
 
@@ -155,13 +140,9 @@ Chart.prototype.xScales = function() {
 
   var _this   = this,
       axis    = _this.options.axis,
-      bar     = _this.options.bar,
       margin  = _this.margin,
       width   = _this.width,
-      xExtent = _this.xExtent,
-      padding = (bar && bar.padding)
-                     ? parseFloat(bar.padding)
-                     : CONSTANTS.BAR.padding;
+      xExtent = _this.xExtent;
 
   // To set the extend at every possible orientation
   if (axis && axis.yAxis && axis.yAxis.orientation) {
@@ -178,7 +159,7 @@ Chart.prototype.xScales = function() {
   }
 
   _this.xScale = d3.scaleBand()
-                   .padding(padding)
+                   .padding(.1)
                    .range([_this.xMin, _this.xMax])
                    .domain(xExtent);
 };
@@ -252,13 +233,12 @@ Chart.prototype.yScales = function() {
 Chart.prototype.addAxes = function() {
 
   var _this   = this,
-      axis    = _this.options.axis,
-      xConfig = (axis && axis.xAxis)
-                      ? _this.options.axis.xAxis
-                      : { },
-      yConfig = (axis && axis.yAxis)
-                      ? _this.options.axis.yAxis
-                      : { };
+      xConfig = (_this.options.axis && _this.options.axis.xAxis)
+                          ? _this.options.axis.xAxis
+                          : CONSTANTS.AXIS_CONFIG.X_AXIS,
+      yConfig = (_this.options.axis && _this.options.axis.yAxis)
+                          ? _this.options.axis.yAxis
+                          : CONSTANTS.AXIS_CONFIG.Y_AXIS;
 
   _this.addXAxis(xConfig);
   _this.addYAxis(yConfig);
@@ -283,7 +263,7 @@ Chart.prototype.addXAxis = function(config) {
       orientation  = (config && config.orientation)
                           ? config.orientation
                           : CONSTANTS.AXIS_CONFIG.X_AXIS.orientation,
-      showAxisLine = (config && config.showAxisLine !== undefined)
+      showAxisLine = (config.showAxisLine !== undefined)
                             ? config.showAxisLine
                             : CONSTANTS.AXIS_CONFIG.X_AXIS.showAxisLine;
 
@@ -292,13 +272,13 @@ Chart.prototype.addXAxis = function(config) {
         var xAxis = d3.axisTop(scale)
                       .tickPadding(padding);
         xAxis = _this.checkXAxisLabels(xAxis, config);
-        _this.drawXAxis(config, xAxis, _this.yMax);
+        _this.drawXAxis(config, xAxis, _this.yMax, 'top-axis');
         break;
     default:
         var xAxis = d3.axisBottom(scale)
                       .tickPadding(padding);
         xAxis = _this.checkXAxisLabels(xAxis, config);
-        _this.drawXAxis(config, xAxis, _this.yMin);
+        _this.drawXAxis(config, xAxis, _this.yMin, 'bottom-axis');
         break;
   }
 
@@ -333,22 +313,22 @@ Chart.prototype.checkXAxisLabels = function(axis, config) {
   if (config.ticks && config.ticks.values) {
     var tick = config.ticks.values;
     if (typeof tick[0] === 'object') {
-      var values = [ ],
+      var key    = [ ],
           labels = [ ];
       tick.forEach(function(d) {
-        values.push(d.value);
+        key.push(d.key);
         labels.push(d.label)
       });
     } else {
-      var values = tick,
+      var key    = tick,
           labels = tick;
     }
   } else {
-    var values = _this.xExtent,
+    var key    = _this.xExtent,
         labels = _this.xExtent;
   }
 
-  axis.tickValues(values)
+  axis.tickValues(key)
       .tickFormat(function(d, i) {
         if (config && config.ticks && config.ticks.formatter)
           return config.ticks.formatter(d);
@@ -368,6 +348,7 @@ Chart.prototype.addYAxis = function(config) {
   var _this          = this,
       scale          = _this.yScale,
       ticksConfig    = config.ticks ? config.ticks : CONSTANTS.AXIS_CONFIG.Y_AXIS.ticks,
+      unit           = ticksConfig.unit ? ticksConfig.unit : '',
       padding        = ticksConfig.padding
                           ? ticksConfig.padding
                           : CONSTANTS.AXIS_CONFIG.Y_AXIS.ticks.padding,
@@ -385,15 +366,15 @@ Chart.prototype.addYAxis = function(config) {
     case 'right':
         var yAxis = d3.axisRight(scale)
                       .tickPadding(padding);
-        yAxis = _this.checkYAxisLabels(yAxis, config);
-        _this.drawYAxis(config, yAxis, _this.xMax);
+        yAxis = _this.checkYAxisLabels(yAxis, config, unit);
+        _this.drawYAxis(config, yAxis, _this.xMax, 'right-axis');
         break;
 
     default:
         var yAxis = d3.axisLeft(scale)
                       .tickPadding(padding);
-        yAxis = _this.checkYAxisLabels(yAxis, config);
-        _this.drawYAxis(config, yAxis, _this.xMin);
+        yAxis = _this.checkYAxisLabels(yAxis, config, unit);
+        _this.drawYAxis(config, yAxis, _this.xMin, 'left-axis');
         break;
   }
 
@@ -412,10 +393,6 @@ Chart.prototype.addYAxis = function(config) {
   if(!showAxisLine) {
     _this.element.querySelector('#y-axis path')
                  .remove();
-
-   d3.select('#y-axis')
-     .selectAll('line')
-     .remove();
   }
 };
 
@@ -424,7 +401,7 @@ Chart.prototype.addYAxis = function(config) {
  * @param {object} axis   - Y Axis variable
  * @param {object} config - Axis configuration options
  */
-Chart.prototype.checkYAxisLabels = function(axis, config) {
+Chart.prototype.checkYAxisLabels = function(axis, config, unit) {
 
   var _this      = this;
 
@@ -435,37 +412,37 @@ Chart.prototype.checkYAxisLabels = function(axis, config) {
   if (config.ticks && config.ticks.values) {
     var tick = config.ticks.values;
     if (typeof tick[0] === 'object') {
-      var values = [ ],
+      var key    = [ ],
           labels = [ ];
       tick.forEach(function(d) {
-        values.push(d.value);
+        key.push(d.key);
         labels.push(d.label)
       });
     } else {
-      var values = tick,
+      var key    = tick,
           labels = tick;
     }
-    if (values.indexOf(_this.yExtent[0]) < 0) {
+    if (key.indexOf(_this.yExtent[0]) < 0) {
       if (firstLabel) {
-        values.unshift(_this.yExtent[0]);
+        key.unshift(_this.yExtent[0]);
       } else {
-        values.unshift('');
+        key.unshift('');
       }
       labels.unshift('');
     }
-    axis.tickValues(values)
+    axis.tickValues(key)
         .tickFormat(function(d, i) {
           if (config && config.ticks && config.ticks.formatter)
-            return config.ticks.formatter(d);
+            return config.ticks.formatter(d) + ' ' + unit;
           else
-            return labels[i];
+            return labels[i] + ' ' + unit;
         });
   } else {
     axis.tickFormat(function(d) {
           if (config && config.ticks && config.ticks.formatter)
-            return config.ticks.formatter(d);
+            return config.ticks.formatter(d) + ' ' + unit;
           else
-            return d;
+            return d + ' ' + unit;
         });
   }
   return axis;
@@ -478,7 +455,7 @@ Chart.prototype.checkYAxisLabels = function(axis, config) {
  * @param {Integer} topMargin - Amount the top margin needs to be shifted
  * @param {String} className  - CSS classname for X Axis
  */
-  Chart.prototype.drawXAxis = function(config, xAxis, topMargin) {
+Chart.prototype.drawXAxis = function(config, xAxis, topMargin, className) {
 
   var _this          = this,
       translateLeft  = _this.defaultMargin(),
@@ -486,13 +463,17 @@ Chart.prototype.checkYAxisLabels = function(axis, config) {
                             ? config.ticks.font_size
                             : CONSTANTS.AXIS_CONFIG.X_AXIS.ticks.font_size;
 
+  className = className !== undefined
+                        ? 'x axis ' + className
+                        : 'x axis';
+
   var tickPosition = {
     x : (config.ticks && config.ticks.x) ? config.ticks.x : 0,
     y : (config.ticks && config.ticks.y) ? config.ticks.y + topMargin : topMargin
   }
 
   _this.xAxisLabels = _this.plot.append('g')
-                                .attr('class', 'fc-axis fc-x-axis')
+                                .attr('class', className)
                                 .attr('id', 'x-axis')
                                 .attr('transform', 'translate(' + tickPosition.x + ', ' + tickPosition.y +')')
                                 .call(xAxis)
@@ -509,8 +490,8 @@ Chart.prototype.checkYAxisLabels = function(axis, config) {
  */
 Chart.prototype.checkAxisLabelRotation = function(config) {
 
-  var _this  = this,
-      ticks  = config.ticks;
+  var _this = this,
+      ticks = config.ticks;
   if (ticks && ticks.rotate && ticks.rotate.angle) {
     var angle  = ticks.rotate.angle;
     var xShift = ticks.rotate.x,
@@ -526,15 +507,17 @@ Chart.prototype.checkAxisLabelRotation = function(config) {
  * @param {Object} yAxis       - y-axis object to draw the axis
  * @param {Integer} leftMargin - Amount the left margin needs to be shifted
  */
-Chart.prototype.drawYAxis = function(config, yAxis, leftMargin) {
+Chart.prototype.drawYAxis = function(config, yAxis, leftMargin, className) {
   var _this     = this,
-      margin    = _this.margin,
       alignment = (config.ticks && config.ticks.alignment)
                                 ? config.ticks.alignment
                                 : CONSTANTS.AXIS_CONFIG.Y_AXIS.ticks.alignment,
       font_size = (config.ticks && config.ticks.font_size)
                                 ? config.ticks.font_size
-                                : CONSTANTS.AXIS_CONFIG.Y_AXIS.ticks.font_size;
+                                : CONSTANTS.AXIS_CONFIG.Y_AXIS.ticks.font_size,
+      className = (className !== undefined)
+                                ? 'y axis ' + className
+                                : 'y axis';
 
   var tickPosition = {
     x : (config.ticks && config.ticks.x) ? config.ticks.x + leftMargin : leftMargin,
@@ -542,7 +525,7 @@ Chart.prototype.drawYAxis = function(config, yAxis, leftMargin) {
   }
 
   _this.plot.append('g')
-            .attr('class', 'fc-axis fc-y-axis')
+            .attr('class', className)
             .attr('id', 'y-axis')
             .attr('transform', 'translate(' + tickPosition.x + ',' + tickPosition.y +')')
             .call(yAxis)
@@ -669,12 +652,13 @@ Chart.prototype.addVerticalGridLines = function(config) {
 
   _this.plot.append('g')
             .attr('id', 'vertical-grid')
-            .attr('class', 'fc-grid vertical-grid')
+            .attr('class', 'grid vertical-grid')
             .attr('transform', 'translate(0 ,' + yTranslate + ')')
             .call(_this.verticalGridLines());
 
 
-  [].forEach.call(_this.element.querySelectorAll('#vertical-grid line'),
+  [].forEach.call(
+    _this.element.querySelectorAll('#vertical-grid line'),
     function (elt) {
         var style = '';
         if (config.color) style += 'stroke : ' + config.color + ';';
@@ -690,39 +674,27 @@ Chart.prototype.addVerticalGridLines = function(config) {
  **/
 Chart.prototype.addHorizontalGridLines = function(config) {
 
-  var _this         = this,
-      margin        = _this.margin,
-      axis          = _this.options.axis,
-      showAxisLine  = (axis && axis.yAxis && axis.yAxis.showAxisLine !== undefined)
-                            ? axis.yAxis.showAxisLine
-                            : CONSTANTS.AXIS_CONFIG.Y_AXIS.showAxisLine;
-      xShift        =  showAxisLine
-                            ? CONSTANTS.DEFAULT_MARGIN.LEFT + margin.left
-                            : 0;
+  var _this = this;
+  config = config || { };
 
   _this.plot.append('g')
             .attr('id', 'horizontal-grid')
-            .attr('class', 'fc-grid horizontal-grid')
-            .attr('transform', 'translate(' + xShift + ',0)')
+            .attr('class', 'grid horizontal-grid')
             .call( _this.horizontalGridLines());
 
-  var lineNodes       = _this.element.querySelectorAll('#horizontal-grid g'),
-      lineNodesLength = lineNodes.length;
+  var lineNodes = _this.element.querySelectorAll('#horizontal-grid line');
+  var lineNodesLength = _this.element.querySelectorAll('#horizontal-grid line').length;
 
-  [].forEach.call(lineNodes, function (elt, i) {
-    var style = '';
-    if (config.color)   style += 'stroke : ' + config.color + ';';
-    if (config.opacity) style += 'stroke-opacity : ' + config.opacity + ';';
-    elt.querySelector('line').setAttribute('style', style);
-  });
-
-  if (config.skipFirst) {
-    lineNodes[0].remove()
-  }
-  if (config.skipLast) {
-    lineNodes[lineNodesLength-1].remove()
-  }
-
+  [].forEach.call(
+    lineNodes,
+    function (elt, i) {
+      if (!(config.skipFirst && i === 0) && !(config.skipLast && i === lineNodesLength-1)) {
+        var style = '';
+        if (config.color) style += 'stroke : ' + config.color + ';';
+        if (config.opacity) style += 'stroke-opacity : ' + config.opacity + ';';
+        elt.setAttribute('style', style);
+      }
+    });
 };
 
 /**
@@ -735,11 +707,14 @@ Chart.prototype.addGoalLines = function() {
       goalLine     = _this.options.goalLine,
       value        = goalLine.value,
       className    = goalLine.class
-                        ? 'fc-goal-line ' + goalLine.class
-                        : 'fc-goal-line',
+                        ? 'qd-goalLine-line ' + goalLine.class
+                        : 'qd-goalLine-line',
       linePosition = _this.yScale(value) - _this.yMin;
 
-  _this.plot.append('g')
+  var goalElement = _this.plot.append('g')
+                              .attr('class', 'qd-goalLine');
+
+  goalElement.append('g')
              .attr('class', className)
              .attr('transform', 'translate(0, ' + linePosition + ')')
              .call( _this.goalLine());
@@ -810,13 +785,13 @@ Chart.prototype.showTooltip = function(config, event, graph) {
       tooltipClass =  config.class ? config.class : '';
 
   d3.select(_this.element)
-    .selectAll('#fc-tooltip')
+    .selectAll('#d3-tip')
     .remove();
 
   var tooltip = d3.select(_this.element)
                   .append('div')
-                  .attr('class', 'fc-tooltip ' + tooltipClass)
-                  .attr('id', 'fc-tooltip');
+                  .attr('class', 'qd-tooltip ' + tooltipClass)
+                  .attr('id', 'd3-tip');
 
   tooltip.node().style.position = 'absolute';
   tooltip.node().style.visibility = 'hidden';
@@ -887,20 +862,20 @@ Chart.prototype.calculatePosition = function(position, d) {
   var _this   = this,
       legend  = _this.options.legend,
       line    = _this.options.line,
-      tooltip = _this.element.querySelector('#fc-tooltip'),
-      border_left_width = parseInt(window.getComputedStyle(_this.element.querySelector('#fc-tooltip'), ':after')
+      tooltip = _this.element.querySelector('#d3-tip'),
+      border_left_width = parseInt(window.getComputedStyle(_this.element.querySelector('#d3-tip'), ':after')
                                          .getPropertyValue('border-left-width')),
-      border_top_width  = parseInt(window.getComputedStyle(_this.element.querySelector('#fc-tooltip'), ':after')
+      border_top_width  = parseInt(window.getComputedStyle(_this.element.querySelector('#d3-tip'), ':after')
                                          .getPropertyValue('border-top-width')),
       tipHeight         = (border_left_width > border_top_width)
                                           ? border_left_width
                                           : border_top_width,
       tooltipHeight     = tipHeight + tooltip.offsetHeight,
       tooltipClasses    = tooltip.classList,
-      left    = _this.xScale(d[0]) + _this.shiftCalculate('x', '#fc-tooltip', tipHeight),
+      left    = _this.xScale(d[0]) + _this.shiftCalculate('x', '#d3-tip', tipHeight),
       top     = _this.element.offsetTop
                      + _this.yScale(d[1])
-                     + _this.shiftCalculate('y', '#fc-tooltip', tipHeight)
+                     + _this.shiftCalculate('y', '#d3-tip', tipHeight)
                      - _this.margin.top;
   if (line && line.plotPoints && line.plotPoints.icon && line.plotPoints.icon.width) {
     top -= line.plotPoints.icon.width/2;
@@ -1006,15 +981,18 @@ Chart.prototype.tooltipBody = function(config) {
 Chart.prototype.verticalGridLines = function() {
 
   var _this  = this,
-      grids  = _this.options.grids,
+      axis   = _this.options.axis,
+      xAxis  = (axis && axis.xAxis)
+                    ? axis.xAxis
+                    : CONSTANTS.AXIS_CONFIG.X_AXIS,
       height = _this.yMin - _this.yMax;
 
   var xTick = d3.axisBottom(_this.xScale)
                 .tickSize(-height)
                 .tickFormat('');
 
-  if (grids && grids.vertical && grids.vertical.values) {
-    var tick = grids.vertical.values;
+  if (xAxis.ticks && xAxis.ticks.values) {
+    var tick = xAxis.ticks.values;
     if (typeof tick[0] === 'object') {
       var key = [ ];
       tick.forEach(function(d) {
@@ -1035,21 +1013,29 @@ Chart.prototype.horizontalGridLines = function() {
 
   var _this = this,
       axis  = _this.options.axis,
-      grids = _this.options.grids,
-      width = (axis && axis.xAxis && axis.yAxis.showAxisLine)
-                    ? _this.width - (CONSTANTS.DEFAULT_MARGIN.LEFT + _this.margin.left)
-                    : _this.width;
+      yAxis = axis && axis.yAxis
+                    ? _this.options.axis.yAxis
+                    : CONSTANTS.AXIS_CONFIG.Y_AXIS,
+      width = _this.width;
 
   var yTick = d3.axisLeft(_this.yScale)
                 .tickSize(-width)
                 .tickFormat('');
 
-  if (grids && grids.horizontal && grids.horizontal.values) {
-    var tick = grids.horizontal.values;
-    if (tick.indexOf(_this.yExtent[0]) < 0) {
-      tick.unshift(_this.yExtent[0]);
+  if (yAxis.ticks && yAxis.ticks.values) {
+    var tick = yAxis.ticks.values;
+    if (typeof tick[0] === 'object') {
+      var key = [ ];
+      tick.forEach(function(d) {
+        key.push(d.key);
+      });
+    } else {
+      var key = tick;
     }
-    yTick.tickValues(tick);
+    if (key.indexOf(_this.yExtent[0]) < 0) {
+      key.unshift(_this.yExtent[0]);
+    }
+    yTick.tickValues(key);
   }
   return yTick;
 };
