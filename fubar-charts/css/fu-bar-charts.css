@@ -1,0 +1,179 @@
+body {
+  margin: 0;
+}
+
+/*============================================================================*/
+/* Axis properties */
+
+.fc-graph-area {
+  display: block;
+}
+
+/*============================================================================*/
+/* Axis properties */
+
+/* Proporties of the the X and Y axis line*/
+.fc-axis path {
+  fill: none;
+  shape-rendering: crispEdges;
+  stroke: #999;
+  stroke-width: 1.5px;
+}
+
+/* Proporties of the the X and Y axis tick line at each point*/
+.fc-axis line {
+  fill: none;
+  shape-rendering: crispEdges;
+  stroke: #999;
+  stroke-width: 1.5px;
+}
+
+/* Proporties of the the X and Y axis ticks text at each point*/
+.fc-axis text {
+  fill: #999;
+  shape-rendering: crispEdges;
+  font-family: sans-serif;
+}
+
+/*============================================================================*/
+/* Grid Line properties */
+
+/* Properties of the grid lines */
+.fc-grid line {
+  fill: none;
+  stroke: #999;
+  stroke-opacity: 0.7;
+  stroke-width: 1px;
+  shape-rendering: crispEdges;
+}
+
+/* To make line invisible through the border */
+.fc-grid path {
+  stroke-width: 0;
+}
+
+/*============================================================================*/
+/* Tooltip properties */
+
+/* Tooltip body properties */
+.fc-tooltip {
+  margin: 0;
+}
+
+#fc-tooltip {
+  line-height: 1;
+  font-size: 13px;
+  text-align: center;
+  padding: 10px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: hsla(0, 0%, 20%, 0.9);
+  color: #fff;
+}
+
+#fc-tooltip:after {
+  content: ' ';
+  position: absolute;
+  width: 0px;
+  height: 0px;
+}
+
+#fc-tooltip.top:after {
+  top: 100%;
+  left: 50%;
+  margin-left: -8px;
+  border-top: 8px solid hsla(0, 0%, 20%, 0.9);
+  border-right: 8px solid transparent;
+  border-left: 8px solid transparent;
+}
+
+#fc-tooltip.bottom:after {
+  bottom: 100%;
+  left: 50%;
+  margin-left: -8px;
+  border-bottom: 8px solid hsla(0, 0%, 20%, 0.9);
+  border-right: 8px solid transparent;
+  border-left: 8px solid transparent;
+}
+
+#fc-tooltip.left:after {
+  top: 50%;
+  left: 100%;
+  margin-top: -8px;
+  border-left: 8px solid hsla(0, 0%, 20%, 0.9);
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+}
+
+#fc-tooltip.right:after {
+  top: 50%;
+  right: 100%;
+  margin-top: -8px;
+  border-right: 8px solid hsla(0, 0%, 20%, 0.9);
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+}
+
+/*============================================================================*/
+/* Goaline properties */
+
+/* Goaline Line properties */
+.fc-goalLine-line line {
+  stroke: grey;
+  stroke-opacity: 0.7;
+  stroke-width: 2;
+  shape-rendering: crispEdges;
+}
+
+/* Goaline path properties */
+.fc-goalLine-line path {
+  stroke-width: 0;
+  display: none;
+}
+
+/*============================================================================*/
+
+
+/**Line Graph**/
+
+.line {
+  fill: none;
+  stroke-linejoin: round;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.qd-legend {
+  width: 100%;
+  font: 10px sans-serif;
+}
+
+.qd-legend-element {
+  cursor: pointer;
+  text-align: center;
+  vertical-align: middle;
+  float: left;
+  height: 45px;
+  line-height: 45px;
+}
+
+.qd-legend-circle {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  vertical-align: middle;
+  display: inline-block;
+  margin-right: 10px;
+}
+.qd-legend .qd-legend-element img {
+  margin: 0 5px 0 0;
+}
+
+.legend img {
+  height: 15px;
+  position: relative;
+  top: 3px;
+}
+
+  /** Tooltip Styles **/
