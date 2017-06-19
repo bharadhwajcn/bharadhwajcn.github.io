@@ -68,7 +68,7 @@ MultiLineChart.prototype.drawLineChart = function(type) {
   var _this      = this,
       line       = _this.options.line ? _this.options.line : { }
       legend     = _this.options.legend,
-      threshold  = _this.options.threshold,
+      threshold  = _this.options.threshold ? _this.options.threshold : { },
       transition = _this.options.transition;
 
   if (legend && legend.show && legend.position === 'top') {
@@ -203,13 +203,13 @@ MultiLineChart.prototype.getThresholdConfig = function(threshold, i) {
                                   ? (threshold.value instanceof Array)
                                           ? threshold.value[i]
                                           : threshold.value
-                                  : threshold.value;
+                                  : null;
 
   thresholdConfig.icon.url = (threshold && threshold.icon && threshold.icon.url)
                                     ? (threshold.icon.url instanceof Array)
                                             ? threshold.icon.url[i]
                                             : threshold.icon.url
-                                    : threshold.icon.url;
+                                    : null;
   thresholdConfig.icon.toBase64 = (threshold && threshold.icon && threshold.icon.toBase64)
                                     ? (threshold.icon.toBase64 instanceof Array)
                                             ? (threshold.icon.toBase64[i] !== undefined)
