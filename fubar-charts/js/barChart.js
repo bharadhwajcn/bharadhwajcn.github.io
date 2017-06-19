@@ -5,18 +5,6 @@
   * @param {String} element - Name of the element to which graph is to be drawn.
   * @param {Object} data - Data for which graph is to be drawn
   * @param {Object} options - Other options that can be added to the graph.
-  *     {String} options.title - Title of the graph
-  *     {Object} options.transition - Details about the transition.
-  *       {Boolean} options.transition.animate - Whether animation needed or not.
-  *       {String} options.transition.type - Type of the animation required.
-  *     {Object} options.margin - Margin to the SVG canvas area.
-  *       {Integer} options.margin.top - Top margin.
-  *       {Integer} options.margin.bottom - Bottom margin.
-  *       {Integer} options.margin.left - Left margin.
-  *       {Integer} options.margin.right - Right margin.
-  *     {String} options.title - Title of the graph
-  *     {Integer} options.barWidth - Width of each bar of the graph
-  *     {Boolean} options.tooltip - Whether tooltip is needed or not.
   */
 var BarChart = function(element, data, options) {
 
@@ -35,7 +23,10 @@ var BarChart = function(element, data, options) {
 
   // Redraw the graph when window size is altered so as to make it responsive.
   window.addEventListener('resize', function(event) {
-    _this.redrawGraph(element, data, options);
+    _this.setValues(element, data, options, {
+      type : 'bar'
+    });
+    _this.drawBarChart('bar');
   });
 
 };
@@ -43,14 +34,6 @@ var BarChart = function(element, data, options) {
 
 // Cloning the baseclass `Chart` so as to access all its methods.
 BarChart.prototype = Object.create(Chart.prototype);
-
-BarChart.prototype.redrawGraph = function(element, data, options) {
-  var _this = this;
-  _this.setValues(element, data, options, {
-    type : 'bar'
-  });
-  _this.drawBarChart('bar');
-};
 
 /**
   * Function which finds the X Axis ticks from the data provided.
@@ -65,7 +48,11 @@ BarChart.prototype.xExtentCalculate = function(data) {
   * @return {Array} - An array which contains minimum and maximum value.
   */
 BarChart.prototype.yExtentCalculate = function(data) {
-  return [0, d3.max(data, function(d) { return d[1]; })];
+  var yExtent = d3.extent(data, function(d) { return d[1]; });
+  if (yExtent[0] > 0) {
+    yExtent[0] = 0;
+  }
+  return yExtent;
 };
 
 /**
@@ -109,18 +96,20 @@ BarChart.prototype.createBars = function(type, data) {
   switch (type) {
     case 'bar':
       var barPlot = _this.plot.append('g')
-                              .attr('class', 'fc-bar')
-                              .attr('transform', 'translate(' + margin.left + ', 0)');
+                              .attr('class', 'fc-bars ');
 
       _this.bar = barPlot.selectAll('bar')
                           .data(data)
                           .enter()
                           .append('path')
-                          .attr('class', 'bar')
+                          .attr('class', 'fc-bar')
                           .attr('fill', _this.color);
       break;
-    case 'stack':
-      _this.groups = _this.plot.selectAll('g.stack')
+    case 'stackedBar':
+      var barPlot = _this.plot.append('g')
+                            .attr('class', 'fc-stacked-bars');
+
+      _this.groups = barPlot.selectAll('g.stack')
                                .data(_this.stack_data)
                                .enter()
                                .append('g')
@@ -130,7 +119,7 @@ BarChart.prototype.createBars = function(type, data) {
                                .data(function(d) { return d; })
                                .enter()
                                .append('path')
-                               .attr('class', 'bars');
+                               .attr('class', 'fc-stacked-bar');
       break;
   }
 };
@@ -193,9 +182,13 @@ BarChart.prototype.calculateBarwidth = function() {
   */
 BarChart.prototype.drawBarsWithAnimation = function(barWidth, animationDelay, duration) {
 
-  var _this  = this,
-      radius = barWidth/2,
-      xShift = _this.barCentering(barWidth, _this.xScale.bandwidth());
+  var _this   = this,
+      bar     = _this.options.bar,
+      radius  = barWidth/2,
+      xShift  = _this.barCentering(barWidth, _this.xScale.bandwidth()),
+      opacity = (bar && bar.opacity)
+                      ? bar.opacity
+                      : CONSTANTS.BAR.opacity;
 
   _this.bar.attr('d', function(d) {
             var x = _this.xScale(d[0]) + xShift;
@@ -208,7 +201,7 @@ BarChart.prototype.drawBarsWithAnimation = function(barWidth, animationDelay, du
           .attr('d', function(d) {
             return _this.drawBar(d, xShift, barWidth)
           })
-          .attr('opacity', _this.options.bar.opacity);
+          .attr('opacity', opacity);
 
 };
 
@@ -225,8 +218,7 @@ BarChart.prototype.drawBarsWithoutAnimation = function(barWidth) {
       opacity = (bar && bar.opacity)
                       ? bar.opacity
                       : CONSTANTS.BAR.opacity,
-      xShift  = _this.barCentering(barWidth, _this.xScale.bandwidth())
-                  + _this.defaultMargin() - _this.xMin;
+      xShift  = _this.barCentering(barWidth, _this.xScale.bandwidth());
 
   _this.bar.attr('d', function(d) {
               return _this.drawBar(d, xShift, barWidth);
@@ -289,7 +281,6 @@ BarChart.prototype.drawBar = function(d, margin, barWidth) {
   */
 BarChart.prototype.barCentering = function(barWidth) {
   var _this = this;
-
   if (barWidth <  _this.xScale.bandwidth())
     return (_this.xScale.bandwidth()-barWidth)/2;
   else
