@@ -28,6 +28,7 @@ const CONSTANTS = {
     width: 4,
     opacity : 1,
     icon : {
+      show : true,
       width : 10
     }
   },

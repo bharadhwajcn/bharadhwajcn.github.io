@@ -90,7 +90,7 @@ LineChart.prototype.initiateDraw = function(type) {
 LineChart.prototype.drawLineChart = function(type) {
 
   var _this     = this,
-      line      = _this.options.line ? _this.options.line : { }
+      line      = _this.options.line ? _this.options.line : CONSTANTS.LINE;
       threshold = _this.options.threshold;
 
   // Calls the base class function to draw canvas.
