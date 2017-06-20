@@ -113,13 +113,14 @@ MultiLineChart.prototype.drawLineChart = function(type) {
   * @param {Integer} i        - Iteration number.
   */
 MultiLineChart.prototype.drawMultiLinesWithDelay = function(type, data, line, threshold, delay, i) {
-  var _this = this;
+  var _this       = this,
+      connectNull = _this.options.connectNull;
 
   var currentLineConfig      = _this.getLineConfig(line, i);
   var currentThresholdConfig = _this.getThresholdConfig(threshold, i);
   var lineId                 = 'line-' + String(i+1);
 
-  _this.drawLine(type, data[i].value, currentLineConfig, currentThresholdConfig, lineId);
+  _this.drawLine(type, data[i].value, currentLineConfig, currentThresholdConfig, connectNull[i], lineId);
   _this.checkTransition();
 
   if (++i < data.length) {

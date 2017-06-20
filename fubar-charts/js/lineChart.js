@@ -89,9 +89,10 @@ LineChart.prototype.initiateDraw = function(type) {
   */
 LineChart.prototype.drawLineChart = function(type) {
 
-  var _this     = this,
-      line      = _this.options.line ? _this.options.line : CONSTANTS.LINE;
-      threshold = _this.options.threshold;
+  var _this       = this,
+      line        = _this.options.line ? _this.options.line : CONSTANTS.LINE;
+      threshold   = _this.options.threshold,
+      connectNull = _this.options.connectNull;
 
   // Calls the base class function to draw canvas.
   _this.drawChart();
@@ -109,7 +110,7 @@ LineChart.prototype.drawLineChart = function(type) {
                     })
                    .curve(d3.curveMonotoneX);
 
-    _this.drawLine(type, _this.data, line, threshold, 'line');
+    _this.drawLine(type, _this.data, line, threshold, connectNull, 'line');
     _this.checkTransition();
   }
 
@@ -123,7 +124,7 @@ LineChart.prototype.drawLineChart = function(type) {
   * @param {Object} threshold - threshold config of the graph.
   * @param {String} lineId    - ID for the line.
   */
-LineChart.prototype.drawLine = function(type, data, line, threshold, lineId) {
+LineChart.prototype.drawLine = function(type, data, line, threshold, connectNull, lineId) {
 
   var _this       = this;
 
@@ -131,7 +132,7 @@ LineChart.prototype.drawLine = function(type, data, line, threshold, lineId) {
                            .attr('class', 'fc-line')
                            .attr('id', 'fc-' + lineId);
 
-  var filteredData = _this.options.connectNull
+  var filteredData = connectNull
                           ? data.filter(_this.line.defined())
                           : data;
 
