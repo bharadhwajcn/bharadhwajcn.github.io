@@ -45,7 +45,8 @@ StackedBarChart.prototype = Object.create(BarChart.prototype);
   */
 StackedBarChart.prototype.createStack = function() {
 
-  var _this = this;
+  var _this = this,
+      bar   = _this.options.bar;
 
   // Creating `stack` data structure
   _this.stack = d3.stack()
@@ -55,6 +56,15 @@ StackedBarChart.prototype.createStack = function() {
 
   // Converting user data to d3 stack form.
   _this.stack_data =  _this.stack(_this.data);
+  if (bar && bar.curve && bar.curve.show && bar.curve.bars.toUpperCase() === 'ALL') {
+    _this.stack_data.reverse().forEach(function(data) {
+      var len = data.length;
+      for (var i = 0; i < len; i++) {
+        data[i][0] = 0;
+      }
+    });
+  }
+
 
   // Getting the x-Axis tick values from the data
   _this.xAxisKey = Object.keys(_this.data[0]).diff(_this.stackList)[0];
@@ -87,7 +97,7 @@ StackedBarChart.prototype.yExtentCalculate = function(data) {
     yExtent[0] = 0;
   }
   return yExtent;
-  
+
 };
 
 /**
@@ -140,7 +150,7 @@ StackedBarChart.prototype.drawBar = function(d, margin, barWidth) {
   var _this = this,
       bar   = _this.options.bar;
 
-  if (bar && bar.curve) {
+  if (bar && bar.curve && bar.curve.show) {
     var radius = barWidth/2;
   } else {
     var radius = 0;
@@ -156,11 +166,13 @@ StackedBarChart.prototype.drawBar = function(d, margin, barWidth) {
     var y  = _this.yScale(d[1]);
     height = _this.yScale(d[0]) - _this.yScale(d[1]);
   }
-
-  if (totalheight === d[1]) {
+  if (bar && bar.curve && bar.curve.show && bar.curve.bars.toUpperCase() === 'ALL') {
     return _this.drawRoundedRectangle(d, x, y, barWidth, height, radius);
   } else {
-    return _this.drawRoundedRectangle(d, x, y, barWidth, height, 0);
+    if (totalheight === d[1]) {
+      return _this.drawRoundedRectangle(d, x, y, barWidth, height, radius);
+    } else {
+      return _this.drawRoundedRectangle(d, x, y, barWidth, height, 0);
+    }
   }
-
 };
