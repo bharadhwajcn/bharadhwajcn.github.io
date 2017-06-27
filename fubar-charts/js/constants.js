@@ -1,4 +1,4 @@
-const CONSTANTS = {
+var CONSTANTS = {
   DEFAULT_MARGIN: {
     LEFT: 15,
     BOTTOM: 30,
@@ -40,6 +40,15 @@ const CONSTANTS = {
       width : 10
     }
   },
+  AREA: {
+    color: '#4584F1',
+    opacity : 1,
+    padding : .05,
+    icon : {
+      show : true,
+      width : 5
+    }
+  },
   LABEL_WIDTH: 35,
   LABEL_LINE_HEIGHT: .3,
   ICON: {
@@ -64,9 +73,9 @@ const CONSTANTS = {
     class: 'fc-line-point'
   },
   AREA_CHART : {
-    type : 'line',
-    element : '.points',
-    class: 'points'
+    type : 'area',
+    element : '.fc-area-point',
+    class: 'fc-area-point'
   },
   FIRST_CHILD: 1,
   AXIS_CONFIG: {
@@ -98,6 +107,5 @@ const CONSTANTS = {
       xLabel : 'X value',
       yLabel : 'Y value'
     }
-  },
-  THRESHOLD: { }
+  }
 };
