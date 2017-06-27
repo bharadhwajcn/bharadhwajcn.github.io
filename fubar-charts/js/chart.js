@@ -863,6 +863,8 @@ Chart.prototype.showTooltip = function(config, event, graph) {
               triggeredEvent = d3.event.type;
               switch (graph.type) {
                 case 'bar':
+                case 'line':
+                case 'area':
                   config.xValue = d[0];
                   config.yValue = d[1];
                   break;
@@ -871,9 +873,6 @@ Chart.prototype.showTooltip = function(config, event, graph) {
                   config.yValue = _this.valueSum(d.data, _this.stackList);
                   config.stackData = d.data;
                   break;
-                case 'line':
-                  config.xValue = d[0];
-                  config.yValue = d[1];
                 case 'multiline':
                   config.xValue = d[0];
                   config.yValue = d[1];
@@ -1098,14 +1097,6 @@ Chart.prototype.horizontalGridLines = function() {
     var tick = grids.horizontal.values;
     if (tick.indexOf(_this.yExtent[0]) < 0) {
       tick.unshift(_this.yExtent[0]);
-      // if (axis && axis.yAxis && axis.yAxis.ticks && axis.yAxis.ticks.values) {
-      //   if (typeof axis.yAxis.ticks.values === 'object') {
-      //     axis.yAxis.ticks.values.unshift({ value : _this.yExtent[0], label : _this.yExtent[0]});
-        console.log('HHA',axis.yAxis.ticks.values, tick )
-        // } else {
-        //   axis.yAxis.ticks.values.unshift(_this.yExtent[0]);
-        // }
-      // }
     }
     yTick.tickValues(tick);
   }
@@ -1260,14 +1251,6 @@ Array.range = function(start, stop, step) {
   }
   return a;
 };
-
-if (Element.prototype.remove === undefined) {
-  Element.prototype.remove = function() {
-    if (this.parentNode) {
-      this.parentNode.removeChild(this);
-    }
-  };
-}
 
 if (String.prototype.contains === undefined) {
   String.prototype.contains = function() {
