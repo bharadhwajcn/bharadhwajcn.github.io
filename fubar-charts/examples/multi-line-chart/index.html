@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+
+<head>
+  <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"/></script>
+  <script src="../../static/js/min/multiLine.min.js"></script>
+  <link rel="stylesheet" href="../../static/css/min/fubar-charts.min.css" type="text/css">
+  <!-- Bootstrap Core CSS -->
+  <link href="../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Theme CSS -->
+  <link href="../../static/css/min/freelancer.min.css" rel="stylesheet">
+
+  <!-- Custom Fonts -->
+  <link href="../../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+
+  <style>
+  .chart-container {
+    height: 90%;
+    width: 100%;
+  }
+  </style>
+</head>
+
+<body id="page-top" class="index">
+  <div id="skipnav"><a href="#maincontent">Skip to main content</a></div>
+
+  <!-- Navigation -->
+  <nav id="mainNav" class="navbar navbar-default navbar-fixed-top navbar-custom">
+      <div class="container">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header page-scroll">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+              <a class="navbar-brand" href="../../">FUBAR CHARTS</a>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav navbar-right">
+                  <li class="hidden">
+                      <a href="../../"></a>
+                  </li>
+                  <li class="page-scroll">
+                      <a href="../../">Back</a>
+                  </li>
+                  <li class="page-scroll">
+                      <a href="../line-chart/">Prev</a>
+                  </li>
+                  <li class="page-scroll">
+                      <a href="../pie-chart/">Next</a>
+                  </li>
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+  <section id="graph">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 text-center">
+              <h2>Multi Line chart</h2>
+              <hr class="star-primary">
+          </div>
+
+          <div class="chart-container" height="600"></div>
+
+        </div>
+      </div>
+  </section>
+
+  <script>
+
+    var element = document.querySelector('.chart-container');
+
+    var data = [
+        { key : 'Series 1',
+          value : [
+                    ['Jan', 177],
+                    ['Feb', 104],
+                    ['Mar', 124],
+                    ['Apr', 127],
+                    ['May', 143],
+                    ['Jun', 130],
+                    ['Jul', 90],
+                    ['Aug', 154],
+                    ['Sep', 114],
+                    ['Oct', 102],
+                    ['Nov', 123],
+                    ['Dec', 135]
+                  ]
+        },
+        { key : 'Series 2',
+          value : [
+                    ['Jan', 82],
+                    ['Feb', 97],
+                    ['Mar', 78],
+                    ['Apr', 86],
+                    ['May', 116],
+                    ['Jun', 95],
+                    ['Jul', null],
+                    ['Aug', 78],
+                    ['Sep', 86],
+                    ['Oct', 116],
+                    ['Nov', 95],
+                    ['Dec', 109]
+                  ]
+        },
+        { key : 'Series 3',
+          value : [
+                    ['Jan', 50],
+                    ['Feb', 40],
+                    ['Mar', 95],
+                    ['Apr', 75],
+                    ['May', 90],
+                    ['Jun', null],
+                    ['Jul', 74],
+                    ['Aug', 68],
+                    ['Sep', 60],
+                    ['Oct', 90],
+                    ['Nov', 48],
+                    ['Dec', 66]
+                  ]
+        },
+    ];
+
+
+    var element = document.querySelector('.chart-container')
+
+    var chart = new MultiLineChart(element, data, {
+      line: {
+        width: [4, 8, 4],
+        color: ['#359fd1', '#B8D551', '#FD8635'],
+        icon: {
+          show : [true, true, true],
+          url: ['https://bharadhwajcn.github.io/fubar-charts/static/images/blue_star.png',
+                'https://bharadhwajcn.github.io/fubar-charts/static/images/green_circle.png',
+                'https://bharadhwajcn.github.io/fubar-charts/static/images/orange_circle.png',
+              ],
+          width : [10, 15, 10]
+        }
+      },
+      threshold : {
+        value : [131, 90, null],
+        icon: {
+          url: ['https://bharadhwajcn.github.io/fubar-charts/static/images/orange_circle.png'],
+          width : 10,
+        }
+      },
+      connectNull: [true, false, true],
+      grids : {
+        vertical : {
+          show : true,     // whether the vertical grids needs to be shown
+          color : '#999',  // color of the vertical grids
+          opacity : .5,    // opacity of the vertical grids
+          values : [ 'Jan', 'Mar', 'May', 'Aug', 'Oct', 'Dec']
+                           // the values to which the grid needs to be drawn.
+                           // values should be same as that given in the data
+        },
+        horizontal : {
+          show : true,       // whether the horizontal grids needs to be shown
+          color : '#999',    // color of the horizontal grids
+          opacity : .5,      // opacity of the horizontal grids
+          skipFirst : false, // whether to skip drawing first grid line as sometimes
+                             //  they aren't required
+          skipLast : false,  // similarly whether to skip the last grid line
+          values : [30, 60, 90, 120, 150, 180]
+                             // the values for which the grid lines needs to be drawn
+        }
+      },
+      transition: {
+        animate: true,
+        duration : 2000,
+        delay : 1000,
+      },
+      margin : {           // margin within the svg container
+        left : 0,
+        right : 0,
+        top : 0,
+        bottom : 0
+      },
+      goalLine : {
+        value : 130,
+        class : 'goalline',
+        icon: {
+          url: 'https://bharadhwajcn.github.io/fubar-charts/static/images/goal_arrow.png',
+          class: 'goal-icon',
+          height : 15,
+          width : 13,
+          left: 0
+        }
+      },
+      axis : {
+        xAxis : {
+          showAxisLine : true, // Whether to show the axis line or not
+          firstLabel : true,    // Whether to hide the first label at x axis
+          orientation: 'bottom',
+          ticks : {
+            values : [ 'Jan', 'Mar', 'May', 'Aug', 'Oct', 'Dec'],
+                                // The tick values that need to be shown
+            padding : 10,       // The padding between ticks and the axis
+          }
+        },
+        yAxis : {
+          showAxisLine : true, // Whether to show the axis line or not
+          firstLabel : false,   // Whether to show first label at y axis
+          orientation: 'left',
+          ticks : {
+            values: [ { value : 30, label : '30m unit' },
+                      { value : 60, label : '60m unit' },
+                      { value : 90, label : '90m unit' },
+                      { value : 120, label : '120m unit' },
+                      { value : 150, label : '150m unit' },
+                      { value : 180, label : '180m unit' },
+                    ],
+                                // The tick values along with its alias label
+                                //   that need to be shown
+            position : {
+              y : 10,
+            },
+            font_size : '12px', // Font size of the ticks at the axis
+          }
+        }
+      },
+      tooltip: {
+        show : true,              // Whether to show the tooltip or not
+        listener : 'click touchstart',
+                                  // listener that the tooltip should respond
+        class : 'custom-tooltip', // Custom CSS class for tooltip
+        /*body : {                // Inbuilt tooltip body
+          title : 'Product X',
+          xLabel : 'X Units',
+          yLabel : 'Y Units',
+        },*/
+        formatter : function() {  //  Customizable tooltip body
+          return this.yValue + ' units <br>in ' + this.xValue;
+        },
+      },
+      legend: {
+        show: true,
+        class: 'legend-class',
+        position : 'bottom',
+        height : 45,
+        clickable : [true, true, true]
+      }
+    });
+
+  </script>
+
+</body>
+</html>

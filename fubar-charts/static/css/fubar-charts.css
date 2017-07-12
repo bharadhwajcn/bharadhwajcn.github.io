@@ -28,11 +28,11 @@ body {
 }
 
 .fc-grid path {
-    stroke-width: 0
+    stroke-width: 0;
 }
 
 .fc-tooltip {
-    margin: 0
+    margin: 0;
 }
 
 #fc-tooltip {
