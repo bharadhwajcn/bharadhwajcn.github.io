@@ -2,10 +2,10 @@
 <html>
 
 <head>
-      <title>Area Chart Example - FUBAR CHARTS</title>
+  <title>Line Chart Example - CINCH CHARTS</title>
   <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"/></script>
-  <script src="../../static/js/min/area.min.js"></script>
-  <link rel="stylesheet" href="../../static/css/min/fubar-charts.min.css" type="text/css">
+  <script src="../../static/js/min/line.min.js"></script>
+  <link rel="stylesheet" href="../../static/css/min/cinch-charts.min.css" type="text/css">
   <!-- Bootstrap Core CSS -->
   <link href="../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
@@ -18,6 +18,9 @@
   <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 
   <style>
+  .external-link a {
+    text-decoration: none;
+  }
   .chart-container {
     height: 65%;
     width: 100%;
@@ -41,7 +44,7 @@
               <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                   <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
               </button>
-              <a class="navbar-brand" href="../../">FUBAR CHARTS</a>
+              <a class="navbar-brand" href="../../">CINCH CHARTS</a>
           </div>
 
           <!-- Collect the nav links, forms, and other content for toggling -->
@@ -54,10 +57,10 @@
                       <a href="../../">Back</a>
                   </li>
                   <li class="page-scroll">
-                      <a href="../stacked-bar-chart/">Prev</a>
+                      <a href="../area-chart/">Prev</a>
                   </li>
                   <li class="page-scroll">
-                      <a href="../line-chart/">Next</a>
+                      <a href="../multi-line-chart/">Next</a>
                   </li>
               </ul>
           </div>
@@ -70,21 +73,23 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-12 text-center">
-              <h2>Area chart</h2>
+              <h2>Line chart</h2>
               <hr class="star-primary">
           </div>
         </div>
         <div class="row">
           <div class="col-md-offset-1">
-            <a href="https://jsfiddle.net/bharadhwaj_cn/fk5Lnbsj/" target="_blank">
+            <h4 class="external-link">
+            <a href="https://jsfiddle.net/bharadhwaj_cn/0d7mLjx3/" target="_blank">
               <span class="label label-default">Basic Example</span>
             </a>
-            <a href="https://jsfiddle.net/bharadhwaj_cn/hxuasphf/" target="_blank">
+            <a href="https://jsfiddle.net/bharadhwaj_cn/g89zc7dx/" target="_blank">
               <span class="label label-primary">Full Option Example</span>
             </a>
-            <a href="https://github.com/bharadhwajcn/fubar-charts/blob/master/docs/area-chart.md#area-chart" target="_blank">
+            <a href="https://github.com/bharadhwajcn/cinch-charts/blob/master/docs/line-chart.md#line-chart" target="_blank">
               <span class="label label-success">Documentation</span>
             </a>
+            </h4>
           </div>
         </div>
         <div class="row">
@@ -93,16 +98,23 @@
           </div>
           <div class="code-container col-lg-5 col-md-5">
             <pre>
-var chart = new AreaChart('.chart-container', data, {
-  area: {
+var chart = new LineChart(element, data, {
+  line: {
     color: '#B8D551',
-    opacity : 0.75,
+    width: 4,
     icon: {
-      show : true,
-      toBase64: true,
-      url: 'https://bharadhwajcn.github.io/fubar-charts/static/images/green_circle.png',
+      show: true,
+      url: 'https://bharadhwajcn.github.io/cinch-charts/static/images/green_circle.png',
+      toBase64: false,
       class: 'point-icon',
-      width : 10
+      width: 10
+    }
+  },
+  threshold: {
+    value: 50,
+    icon: {
+      url: 'https://bharadhwajcn.github.io/cinch-charts/static/images/orange_circle.png',
+      toBase64: false,
     }
   },
   grids: {
@@ -134,8 +146,7 @@ var chart = new AreaChart('.chart-container', data, {
     value: 50,
     class: 'goalline',
     icon: {
-      url: 'https://bharadhwajcn.github.io/fubar-charts/static/images/goal_arrow.png',
-      toBase64: true,
+      url: 'https://bharadhwajcn.github.io/cinch-charts/static/images/goal_arrow.png',
       class: 'goal-icon',
       height: 15,
       width: 13,
@@ -150,7 +161,7 @@ var chart = new AreaChart('.chart-container', data, {
       ticks: {
         values: ['Jan', 'Mar', 'May', 'Aug', 'Oct', 'Dec'],
         padding: 10,
-        formatter: function(value) {
+				formatter: function(value) {
           return value + " '17";
         }
       }
@@ -191,9 +202,10 @@ var chart = new AreaChart('.chart-container', data, {
     formatter: function() {
       return this.yValue + ' units in ' + this.xValue;
     },
-  }
+  },
+  connectNull: true
 });
-</pre>
+        </pre>
           </div>
         </div>
       </div>
@@ -204,30 +216,37 @@ var chart = new AreaChart('.chart-container', data, {
     var element = document.querySelector('.chart-container');
 
     var data = [
-          ['Jan', 10],
-          ['Feb', 20],
-          ['Mar', 10],
-          ['Apr', 20],
-          ['May', 10],
-          ['Jun', 20],
-          ['Jul', 10],
-          ['Aug', 20],
-          ['Sep', 10],
-          ['Oct', 20],
-          ['Nov', 10],
-          ['Dec', 20]
-    ];
+                  ['Jan', 10],
+                  ['Feb', 70],
+                  ['Mar', 30],
+                  ['Apr', 10],
+                  ['May', null],
+                  ['Jun', 45],
+                  ['Jul', 76],
+                  ['Aug', 40],
+                  ['Sep', 40],
+                  ['Oct', 60],
+                  ['Nov', 40],
+                  ['Dec', 80]
+              ];
 
-    var chart = new AreaChart('.chart-container', data, {
-      area: {
+    var chart = new LineChart(element, data, {
+      line: {
         color: '#B8D551',
-        opacity : 0.75,
+        width: 4,
         icon: {
-          show : true,
-          toBase64: true,
-          url: 'https://bharadhwajcn.github.io/fubar-charts/static/images/green_circle.png',
+          show: true,
+          url: 'https://bharadhwajcn.github.io/cinch-charts/static/images/green_circle.png',
+          toBase64: false,
           class: 'point-icon',
-          width : 10
+          width: 10
+        }
+      },
+      threshold: {
+        value: 50,
+        icon: {
+          url: 'https://bharadhwajcn.github.io/cinch-charts/static/images/orange_circle.png',
+          toBase64: false,
         }
       },
       grids: {
@@ -259,8 +278,7 @@ var chart = new AreaChart('.chart-container', data, {
         value: 50,
         class: 'goalline',
         icon: {
-          url: 'https://bharadhwajcn.github.io/fubar-charts/static/images/goal_arrow.png',
-          toBase64: true,
+          url: 'https://bharadhwajcn.github.io/cinch-charts/static/images/goal_arrow.png',
           class: 'goal-icon',
           height: 15,
           width: 13,
@@ -275,7 +293,7 @@ var chart = new AreaChart('.chart-container', data, {
           ticks: {
             values: ['Jan', 'Mar', 'May', 'Aug', 'Oct', 'Dec'],
             padding: 10,
-            formatter: function(value) {
+    				formatter: function(value) {
               return value + " '17";
             }
           }
@@ -316,9 +334,9 @@ var chart = new AreaChart('.chart-container', data, {
         formatter: function() {
           return this.yValue + ' units <br>in ' + this.xValue;
         },
-      }
+      },
+      connectNull: true
     });
-
   </script>
 
 </body>

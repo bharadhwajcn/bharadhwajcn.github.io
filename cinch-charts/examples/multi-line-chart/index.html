@@ -2,10 +2,10 @@
 <html>
 
 <head>
-  <title>Multi Line Chart Example - FUBAR CHARTS</title>
+  <title>Multi Line Chart Example - CINCH CHARTS</title>
   <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"/></script>
   <script src="../../static/js/min/multiLine.min.js"></script>
-  <link rel="stylesheet" href="../../static/css/min/fubar-charts.min.css" type="text/css">
+  <link rel="stylesheet" href="../../static/css/min/cinch-charts.min.css" type="text/css">
   <!-- Bootstrap Core CSS -->
   <link href="../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
@@ -18,6 +18,9 @@
   <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 
   <style>
+  .external-link a {
+    text-decoration: none;
+  }
   .chart-container {
     height: 65%;
     width: 100%;
@@ -41,7 +44,7 @@
               <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                   <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
               </button>
-              <a class="navbar-brand" href="../../">FUBAR CHARTS</a>
+              <a class="navbar-brand" href="../../">CINCH CHARTS</a>
           </div>
 
           <!-- Collect the nav links, forms, and other content for toggling -->
@@ -77,15 +80,17 @@
         </div>
         <div class="row">
           <div class="col-md-offset-1">
+            <h4 class="external-link">
             <a href="https://jsfiddle.net/bharadhwaj_cn/nnu5xqj4/" target="_blank">
               <span class="label label-default">Basic Example</span>
             </a>
             <a href="https://jsfiddle.net/bharadhwaj_cn/reya463o/" target="_blank">
               <span class="label label-primary">Full Option Example</span>
             </a>
-            <a href="https://github.com/bharadhwajcn/fubar-charts/blob/master/docs/multi-line-chart.md#multi-line-chart" target="_blank">
+            <a href="https://github.com/bharadhwajcn/cinch-charts/blob/master/docs/multi-line-chart.md#multi-line-chart" target="_blank">
               <span class="label label-success">Documentation</span>
             </a>
+            </h4>
           </div>
         </div>
         <div class="row">
@@ -100,9 +105,9 @@ var chart = new MultiLineChart(element, data, {
     color: ['#359fd1', '#B8D551', '#FD8635'],
     icon: {
       show : [true, true, true],
-      url: ['https://bharadhwajcn.github.io/fubar-charts/static/images/blue_star.png',
-            'https://bharadhwajcn.github.io/fubar-charts/static/images/green_circle.png',
-            'https://bharadhwajcn.github.io/fubar-charts/static/images/orange_circle.png',
+      url: ['https://bharadhwajcn.github.io/cinch-charts/static/images/blue_star.png',
+            'https://bharadhwajcn.github.io/cinch-charts/static/images/green_circle.png',
+            'https://bharadhwajcn.github.io/cinch-charts/static/images/orange_circle.png',
           ],
       width : [10, 15, 10]
     }
@@ -110,14 +115,14 @@ var chart = new MultiLineChart(element, data, {
   threshold : {
     value : [131, 90, null],
     icon: {
-      url: ['https://bharadhwajcn.github.io/fubar-charts/static/images/orange_circle.png'],
+      url: ['https://bharadhwajcn.github.io/cinch-charts/static/images/orange_circle.png'],
       width : 10,
     }
   },
   connectNull: [true, false, true],
   grids : {
     vertical : {
-      show : true,    
+      show : true,
       color : '#999',
       opacity : .5,
       values : [ 'Jan', 'Mar', 'May', 'Aug', 'Oct', 'Dec']
@@ -146,7 +151,7 @@ var chart = new MultiLineChart(element, data, {
     value : 130,
     class : 'goalline',
     icon: {
-      url: 'https://bharadhwajcn.github.io/fubar-charts/static/images/goal_arrow.png',
+      url: 'https://bharadhwajcn.github.io/cinch-charts/static/images/goal_arrow.png',
       class: 'goal-icon',
       height : 15,
       width : 13,
@@ -268,9 +273,9 @@ var chart = new MultiLineChart(element, data, {
         color: ['#359fd1', '#B8D551', '#FD8635'],
         icon: {
           show : [true, true, true],
-          url: ['https://bharadhwajcn.github.io/fubar-charts/static/images/blue_star.png',
-                'https://bharadhwajcn.github.io/fubar-charts/static/images/green_circle.png',
-                'https://bharadhwajcn.github.io/fubar-charts/static/images/orange_circle.png',
+          url: ['https://bharadhwajcn.github.io/cinch-charts/static/images/blue_star.png',
+                'https://bharadhwajcn.github.io/cinch-charts/static/images/green_circle.png',
+                'https://bharadhwajcn.github.io/cinch-charts/static/images/orange_circle.png',
               ],
           width : [10, 15, 10]
         }
@@ -278,29 +283,25 @@ var chart = new MultiLineChart(element, data, {
       threshold : {
         value : [131, 90, null],
         icon: {
-          url: ['https://bharadhwajcn.github.io/fubar-charts/static/images/orange_circle.png'],
+          url: ['https://bharadhwajcn.github.io/cinch-charts/static/images/orange_circle.png'],
           width : 10,
         }
       },
       connectNull: [true, false, true],
       grids : {
         vertical : {
-          show : true,     // whether the vertical grids needs to be shown
-          color : '#999',  // color of the vertical grids
-          opacity : .5,    // opacity of the vertical grids
+          show : true,
+          color : '#999',
+          opacity : .5,
           values : [ 'Jan', 'Mar', 'May', 'Aug', 'Oct', 'Dec']
-                           // the values to which the grid needs to be drawn.
-                           // values should be same as that given in the data
         },
         horizontal : {
-          show : true,       // whether the horizontal grids needs to be shown
-          color : '#999',    // color of the horizontal grids
-          opacity : .5,      // opacity of the horizontal grids
-          skipFirst : false, // whether to skip drawing first grid line as sometimes
-                             //  they aren't required
-          skipLast : false,  // similarly whether to skip the last grid line
+          show : true,
+          color : '#999',
+          opacity : .5,
+          skipFirst : false,
+          skipLast : false,
           values : [30, 60, 90, 120, 150, 180]
-                             // the values for which the grid lines needs to be drawn
         }
       },
       transition: {
@@ -308,7 +309,7 @@ var chart = new MultiLineChart(element, data, {
         duration : 2000,
         delay : 1000,
       },
-      margin : {           // margin within the svg container
+      margin : {
         left : 0,
         right : 0,
         top : 0,
@@ -318,7 +319,7 @@ var chart = new MultiLineChart(element, data, {
         value : 130,
         class : 'goalline',
         icon: {
-          url: 'https://bharadhwajcn.github.io/fubar-charts/static/images/goal_arrow.png',
+          url: 'https://bharadhwajcn.github.io/cinch-charts/static/images/goal_arrow.png',
           class: 'goal-icon',
           height : 15,
           width : 13,
@@ -327,18 +328,17 @@ var chart = new MultiLineChart(element, data, {
       },
       axis : {
         xAxis : {
-          showAxisLine : true, // Whether to show the axis line or not
-          firstLabel : true,    // Whether to hide the first label at x axis
+          showAxisLine : true,
+          firstLabel : true,
           orientation: 'bottom',
           ticks : {
             values : [ 'Jan', 'Mar', 'May', 'Aug', 'Oct', 'Dec'],
-                                // The tick values that need to be shown
-            padding : 10,       // The padding between ticks and the axis
+            padding : 10,
           }
         },
         yAxis : {
-          showAxisLine : true, // Whether to show the axis line or not
-          firstLabel : false,   // Whether to show first label at y axis
+          showAxisLine : true,
+          firstLabel : false,
           orientation: 'left',
           ticks : {
             values: [ { value : 30, label : '30m unit' },
@@ -348,26 +348,18 @@ var chart = new MultiLineChart(element, data, {
                       { value : 150, label : '150m unit' },
                       { value : 180, label : '180m unit' },
                     ],
-                                // The tick values along with its alias label
-                                //   that need to be shown
             position : {
               y : 10,
             },
-            font_size : '12px', // Font size of the ticks at the axis
+            font_size : '12px',
           }
         }
       },
       tooltip: {
-        show : true,              // Whether to show the tooltip or not
+        show : true,
         listener : 'click touchstart',
-                                  // listener that the tooltip should respond
-        class : 'custom-tooltip', // Custom CSS class for tooltip
-        /*body : {                // Inbuilt tooltip body
-          title : 'Product X',
-          xLabel : 'X Units',
-          yLabel : 'Y Units',
-        },*/
-        formatter : function() {  //  Customizable tooltip body
+        class : 'custom-tooltip',
+        formatter : function() {
           return this.yValue + ' units <br>in ' + this.xValue;
         },
       },

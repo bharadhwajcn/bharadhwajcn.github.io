@@ -2,10 +2,10 @@
 <html>
 
 <head>
-  <title>Bar Chart Example - FUBAR CHARTS</title>
+  <title>Bar Chart Example - CINCH CHARTS</title>
   <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"/></script>
   <script src="../../static/js/min/bar.min.js"></script>
-  <link rel="stylesheet" href="../../static/css/min/fubar-charts.min.css" type="text/css">
+  <link rel="stylesheet" href="../../static/css/min/cinch-charts.min.css" type="text/css">
   <!-- Bootstrap Core CSS -->
   <link href="../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
@@ -18,6 +18,9 @@
   <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 
   <style>
+  .external-link a {
+    text-decoration: none;
+  }
   .chart-container {
     height: 65%;
     width: 100%;
@@ -41,7 +44,7 @@
               <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                   <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
               </button>
-              <a class="navbar-brand" href="../../">FUBAR CHARTS</a>
+              <a class="navbar-brand" href="../../">CINCH CHARTS</a>
           </div>
 
           <!-- Collect the nav links, forms, and other content for toggling -->
@@ -76,15 +79,17 @@
         </div>
         <div class="row">
           <div class="col-md-offset-1">
+            <h4 class="external-link">
             <a href="https://jsfiddle.net/bharadhwaj_cn/c1tz9jL4/" target="_blank">
               <span class="label label-default">Basic Example</span>
             </a>
             <a href="https://jsfiddle.net/bharadhwaj_cn/00ruhhur/" target="_blank">
               <span class="label label-primary">Full Option Example</span>
             </a>
-            <a href="https://github.com/bharadhwajcn/fubar-charts/blob/master/docs/bar-chart.md#bar-chart" target="_blank">
+            <a href="https://github.com/bharadhwajcn/cinch-charts/blob/master/docs/bar-chart.md#bar-chart" target="_blank">
               <span class="label label-success">Documentation</span>
             </a>
+            </h4>
           </div>
         </div>
         <div class="row">
@@ -132,7 +137,7 @@ var chart = new BarChart(element, data, {
     value : 60,
     class : 'goalline',
     icon: {
-      url: 'https://bharadhwajcn.github.io/fubar-charts/static/images/goal_arrow.png',
+      url: 'https://bharadhwajcn.github.io/cinch-charts/static/images/goal_arrow.png',
       toBase64 : true,
       class: 'goal-icon',
       height : 20,
@@ -251,7 +256,7 @@ var chart = new BarChart(element, data, {
         value : 60,
         class : 'goalline',
         icon: {
-          url: 'https://bharadhwajcn.github.io/fubar-charts/static/images/goal_arrow.png',
+          url: 'https://bharadhwajcn.github.io/cinch-charts/static/images/goal_arrow.png',
           toBase64 : true,
           class: 'goal-icon',
           height : 20,

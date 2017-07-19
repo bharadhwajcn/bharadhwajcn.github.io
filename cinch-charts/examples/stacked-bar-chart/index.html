@@ -2,10 +2,10 @@
 <html>
 
 <head>
-  <title>Stacked Bar Chart Example - FUBAR CHARTS</title>
+  <title>Stacked Bar Chart Example - CINCH CHARTS</title>
   <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"/></script>
   <script src="../../static/js/min/stackedBar.min.js"></script>
-  <link rel="stylesheet" href="../../static/css/min/fubar-charts.min.css" type="text/css">
+  <link rel="stylesheet" href="../../static/css/min/cinch-charts.min.css" type="text/css">
   <!-- Bootstrap Core CSS -->
   <link href="../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
@@ -18,6 +18,9 @@
   <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 
   <style>
+  .external-link a {
+    text-decoration: none;
+  }
   .chart-container {
     height: 65%;
     width: 100%;
@@ -41,7 +44,7 @@
               <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                   <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
               </button>
-              <a class="navbar-brand" href="../../">FUBAR CHARTS</a>
+              <a class="navbar-brand" href="../../">CINCH CHARTS</a>
           </div>
 
           <!-- Collect the nav links, forms, and other content for toggling -->
@@ -76,15 +79,17 @@
         </div>
         <div class="row">
           <div class="col-md-offset-1">
+            <h4 class="external-link">
             <a href="https://jsfiddle.net/bharadhwaj_cn/cvnk19f8/" target="_blank">
               <span class="label label-default">Basic Example</span>
             </a>
             <a href="https://jsfiddle.net/bharadhwaj_cn/qLmntobt/" target="_blank">
               <span class="label label-primary">Full Option Example</span>
             </a>
-            <a href="https://github.com/bharadhwajcn/fubar-charts/blob/master/docs/stacked-bar-chart.md#stacked-bar-chart" target="_blank">
+            <a href="https://github.com/bharadhwajcn/cinch-charts/blob/master/docs/stacked-bar-chart.md#stacked-bar-chart" target="_blank">
               <span class="label label-success">Documentation</span>
             </a>
+            </h4>
           </div>
         </div>
         <div class="row">
@@ -96,7 +101,7 @@
 var chart = new StackedBarChart(element, data, stack, {
   bar : {
     color :  ['#90ED7D', '#757575', '#00526C', '#6ED1F7', '#238FFF'],
-    width : 20, 
+    width : 20,
     curve : {
       show : true,
       bars : 'top'
@@ -135,7 +140,7 @@ var chart = new StackedBarChart(element, data, stack, {
     value : 60,
     class : 'goalline',
     icon: {
-      url: 'https://bharadhwajcn.github.io/fubar-charts/static/images/goal_arrow.png',
+      url: 'https://bharadhwajcn.github.io/cinch-charts/static/images/goal_arrow.png',
       toBase64 : true,
       class: 'goal-icon',
       height : 20,
@@ -205,16 +210,16 @@ var chart = new StackedBarChart(element, data, stack, {
   var chart = new StackedBarChart(element, data, stack, {
     bar : {
       color :  ['#90ED7D', '#757575', '#00526C', '#6ED1F7', '#238FFF'],
-                         // color of the bar
-      width : 20,        // width of the bar
+
+      width : 20,
       curve : {
         show : true,
         bars : 'top'
-      },      // whether the curve at the top of bar is needed or not
-      opacity : 0.8,     // opacity of each bar
-      padding : .01,     // space between 2 adjacent bar
+      },
+      opacity : 0.8,
+      padding : .01,
     },
-    margin : {           // margin within the svg container
+    margin : {
       left : 0,
       right : 0,
       top : 0,
@@ -227,51 +232,45 @@ var chart = new StackedBarChart(element, data, stack, {
     },
     grids : {
       vertical : {
-        show : true,     // whether the vertical grids needs to be shown
-        color : '#999',  // color of the vertical grids
-        opacity : .5,    // opacity of the vertical grids
+        show : true,
+        color : '#999',
+        opacity : .5,
         values : [ '2010', '2012', '2014', '2016']
-                         // the values to which the grid needs to be drawn.
-                         // values should be same as that given in the data
       },
       horizontal : {
-        show : true,       // whether the horizontal grids needs to be shown
-        color : '#999',    // color of the horizontal grids
-        opacity : .5,      // opacity of the horizontal grids
-        skipFirst : false, // whether to skip drawing first grid line as sometimes
-                           //  they aren't required
-        skipLast : false,  // similarly whether to skip the last grid line
+        show : true,
+        color : '#999',
+        opacity : .5,
+        skipFirst : false,
+        skipLast : false,
         values : [0, 10, 30, 40, 50, 80]
-                           // the values for which the grid lines needs to be drawn
       }
     },
     goalLine : {
-      value : 60,          // the value at which the goal line needs to be drawn
-      class : 'goalline',  // custom CSS class for the
+      value : 60,
+      class : 'goalline',
       icon: {
-        url: 'https://bharadhwajcn.github.io/fubar-charts/static/images/goal_arrow.png',
-                          // URL for the icon that needs to be added
-        toBase64 : true,  // whether the icon needs to be converted to base64
-        class: 'goal-icon', // custom CSS class for icon
-        height : 20,      // height of the icon
-        width : 20,       // width of the icon
-        left: 0          // the amount that needs to be moved to left
+        url: 'https://bharadhwajcn.github.io/cinch-charts/static/images/goal_arrow.png',
+        toBase64 : true,
+        class: 'goal-icon',
+        height : 20,
+        width : 20,
+        left: 0
       }
     },
     axis : {
       xAxis : {
-        showAxisLine : true, // Whether to show the axis line or not
-        firstLabel : true,    // Whether to hide the first label at x axis
+        showAxisLine : true,
+        firstLabel : true,
         orientation: 'bottom',
         ticks : {
           values : [ '2010', '2012', '2014', '2016'],
-                              // The tick values that need to be shown
-          padding : 10,       // The padding between ticks and the axis
+          padding : 10,
         }
       },
       yAxis : {
-        showAxisLine : true, // Whether to show the axis line or not
-        firstLabel : true,   // Whether to show first label at y axis
+        showAxisLine : true,
+        firstLabel : true,
         orientation: 'left',
         ticks : {
           values: [ { value : 10, label : '10 m unit' },
@@ -280,12 +279,10 @@ var chart = new StackedBarChart(element, data, stack, {
                     { value : 50, label : '50 m unit' },
                     { value : 80, label : '80 m unit' },
                   ],
-                              // The tick values along with its alias label
-                              //   that need to be shown
-          font_size : '12px', // Font size of the ticks at the axis
+          font_size : '12px',
           formatter : function(value) {
             return String(value) + 'k units';
-          },                  // Formatter function to customize tooltip
+          },
         }
       }
     },
